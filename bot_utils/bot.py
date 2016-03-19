@@ -3,6 +3,13 @@ from django.conf import settings
 import requests
 
 
+def escape_markdown(str):
+    str = str.replace('*', '\\*')
+    str = str.replace('_', '\\_')
+    str = str.replace('[', '\\[')
+    return str
+
+
 class Bot(object):
     def __init__(self, token):
         self.token = token

@@ -2,7 +2,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.conf import settings
 
-from bot_utils.bot import bot
+from bot_utils.bot import bot, escape_markdown
 
 from datetime import datetime
 import json
@@ -31,6 +31,9 @@ def seyren_notification(request):
         target = notification['alerts'][0]['target']
         name = notification['check']['name']
         seyrenUrl = notification['seyrenUrl']
+
+        name = escape_markdown(name)
+        target = escape_markdown(target)
 
         title = '%s - %s' % (name, state_to_str[to_type])
         url = '%s/#/checks/%s' % (seyrenUrl, checkId)
