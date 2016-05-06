@@ -89,7 +89,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
-
-BOT_TOKEN = '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11'
-BOT_USERNAME = 'SeyrenTelegramBotUsername'
-ALERTS_CHANNEL_ID = '@ChannelIdHere'
+STATIC_ROOT = 'static'
+ABOUT_URL = 'http://telegram-bot.org/'

@@ -2,7 +2,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.conf import settings
 
-from bot_utils.bot import bot, escape_markdown
+from bot_utils.bot import Bot, escape_markdown
+from .models import Alert
 
 from datetime import datetime
 import json
@@ -13,7 +14,7 @@ state_to_str = {'OK': 'Back To OK',
 
 
 @csrf_exempt
-def seyren_notification(request):
+def seyren_notification(request, alert_url):
     if request.method != 'POST':
         return HttpResponseForbidden()
 
@@ -47,13 +48,16 @@ def seyren_notification(request):
                   '*Warn Level:* {warn}\n' \
                   '*Error Level:* {error}\n' \
                   '\n' \
-                  'Alerts by [Seyren]({url}) via @{username}'
+                  'Alerts by [Seyren]({url}) via [SeyrenTelegramBot]({about_url})'
 
         message = message.format(title=title, target=target, value=value, from_t=from_type,
                                  to=to_type, time=time_str, warn=warn, error=error, url=url,
-                                 username=settings.BOT_USERNAME)
+                                 about_url=settings.ABOUT_URL)
 
-        bot.send_message(settings.ALERTS_CHANNEL_ID, message)
+        alerts_list = Alert.objects.filter(url=alert_url).values_list('bot_token', 'chat_id')
+        for (bot_token, chat_id) in alerts_list:
+            Bot(bot_token).send_message(chat_id, message)
+
         return HttpResponse(status=204)
     except Exception:
-        return HttpResponseBadRequest()
+       return HttpResponseBadRequest()

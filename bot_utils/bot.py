@@ -1,5 +1,3 @@
-from django.conf import settings
-
 import requests
 
 
@@ -24,4 +22,3 @@ class Bot(object):
                       'disable_web_page_preview': True}
         return self.call_remote_method('sendMessage', parameters)
 
-bot = Bot(settings.BOT_TOKEN)
